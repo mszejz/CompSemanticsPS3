@@ -101,7 +101,7 @@ instance Fly Argument Argument where
       fly x y = Predicate { lemma = "fly", arguments = [x, y] }
 
 instance Fly Argument Predicate where
-      fly x y = Predicate { lemma = lemma y, arguments = [x, arguments y !! 0] }
+      fly x y = Predicate { lemma = "fly", arguments = [x, arguments y !! 0] }
 
 --Verb "Catch"
 class Catch a b where
@@ -118,7 +118,7 @@ instance Drive Argument Argument where
 	drive x y = Predicate {lemma = "drive", arguments = [x, y]}
 
 instance Drive Argument Predicate where
-     drive x y = Predicate { lemma = lemma y, arguments = [x, arguments y !! 0] }
+     drive x y = Predicate { lemma = "drive", arguments = [x, arguments y !! 0] }
 
 -- POPULATE THE KNOWLEDGE BASE AS FOLLOWS
 facts =
@@ -148,20 +148,11 @@ getSecondArg predicate = last (arguments predicate)
 -- how (e.g. qHow john boston -- fly)
 -- CREATE QUESTION-ANSWERING FUNCTIONS HERE
 
-qWhere :: (Argument -> Predicate -> Predicate) -> Argument -> (Predicate -> Predicate)
-qWhere verb arg = verb arg
-
---class QWhere a b where
---	qWhere ::  a -> b -> Argument
-
---instance 
-
---getPredicate :: (a -> b -> Predicate) -> Argument -> Bool
---getPredicate verb argument = null [predicates | predicates <- facts, elem predicates [verb argument predicates | predicates <- context]]
+qWhere :: (Argument -> Predicate -> Predicate) -> Argument -> [String]
+qWhere verb arg = [getValue (getSecondArg (x)) | x <- facts] 
 
 
---qWhere :: (a -> b -> Predicate) -> Argument -> Boolean
---qWhere verb argument = null [x | x <- facts, elem x [fly john x | x <- context]]
+
 
 
 
