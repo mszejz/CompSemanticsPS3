@@ -148,9 +148,12 @@ getSecondArg predicate = last (arguments predicate)
 -- how (e.g. qHow john boston -- fly)
 -- CREATE QUESTION-ANSWERING FUNCTIONS HERE
 
-qWhere :: (Argument -> Predicate -> Predicate) -> Argument -> [String]
-qWhere verb arg = [getValue (getSecondArg (x)) | x <- facts] 
+--qWhere :: (Argument -> Predicate -> Predicate) -> Argument -> [String]
+--qWhere verb arg = [getValue (getSecondArg (x)) | x <- facts] 
 
+
+qWhere :: (Argument -> Predicate -> Predicate) -> Argument -> String
+qWhere verb arg = concat [getValue (getSecondArg z) | z <-[ verb arg (to (getSecondArg y)) | y <- [x| x <- facts, (getFirstArg x) == arg]], elem z facts]
 
 
 
