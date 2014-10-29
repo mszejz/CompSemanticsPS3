@@ -152,6 +152,16 @@ getSecondArg predicate = last (arguments predicate)
 --qWhere verb arg = [getValue (getSecondArg (x)) | x <- facts] 
 
 
+
+
+--It is assumed that qWhere is evaluating the truth of whether an argument is going
+--"to" some place
+--Filter facts intially, using the given argument, then evaluate the (Argument -> Predicate -> Predicate)
+-- function with the second argument of every remaining predicate (after filtering). Next, we take the list of 
+-- predicates from evaluating the (Argument -> Predicate -> Predicate) function, and check which of those predicates
+-- is in our facts. We return the concatination of the value of the second argument from the predicates that
+--match our facts (presumably, we will only find one match because our argument cannot be going to more than one place at the
+-- same time)
 qWhere :: (Argument -> Predicate -> Predicate) -> Argument -> String
 qWhere verb arg = concat [getValue (getSecondArg z) | z <-[ verb arg (to (getSecondArg y)) | y <- [x| x <- facts, (getFirstArg x) == arg]], elem z facts]
 
