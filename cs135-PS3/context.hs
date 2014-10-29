@@ -158,17 +158,22 @@ getSecondArg predicate = last (arguments predicate)
 --match our facts (presumably, we will only find one match because our argument cannot be going to more than one place at the
 -- same time)
 qWhere :: (Argument -> Predicate -> Predicate) -> Argument -> String
-qWhere verb arg = concat [getValue (getSecondArg z) | z <-[ verb arg (to (getSecondArg y)) | y <- [x| x <- facts, (getFirstArg x) == arg]], elem z facts]
+qWhere verb arg = let ans = concat [getValue (getSecondArg z) | z <-[ verb arg (to (getSecondArg y)) | y <- [x| x <- facts, (getFirstArg x) == arg]], elem z facts]
+	in if null ans then "I don't know" else ans
 
 --Evaluate the (Argument -> Predicate -> Predicate) function with the first argument of every predicat in facts as first argument
 --to the function. Check which of the resulting predicates are in facts, and return the first argument of the match
 qWho :: (Argument -> Predicate -> Predicate) -> Predicate -> String
-qWho verb preposition = concat [getValue (getFirstArg z) | z <-[ verb (getFirstArg y) preposition | y <- facts], elem z facts]
-
-
+qWho verb preposition = let ans = concat [getValue (getFirstArg z) | z <-[ verb (getFirstArg y) preposition | y <- facts], elem z facts]
+	in if null ans then "I don't know" else ans
 --Evaluate the (Argument -> Argument -> Predicate) function with the second argument for every predicat in facts
 --(after filtering for facts that just contain the argument given to qWhat). Match the resulting predicates with the
---facts list, and outputt he value of the second argument for the matching predicate
+--facts list, and output the value of the second argument for the matching predicate
 qWhat :: (Argument -> Argument -> Predicate) -> Argument -> String
-qWhat verb arg = concat [getValue (getSecondArg z) | z <-[ verb arg (getSecondArg y) | y <- [x| x <- facts, (getFirstArg x) == arg]], elem z facts]
+qWhat verb arg = let ans = concat [getValue (getSecondArg z) | z <-[ verb arg (getSecondArg y) | y <- [x| x <- facts, (getFirstArg x) == arg]], elem z facts]
+	in if null ans then "I don't know" else ans
+
+
+
+
 
